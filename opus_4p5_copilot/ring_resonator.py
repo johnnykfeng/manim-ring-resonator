@@ -59,13 +59,13 @@ class RingResonatorAnimation(Scene):
             color=YELLOW,
             stroke_width=2
         )
-        coupling_text = Text("Coupling Region", font_size=18, color=YELLOW)
-        coupling_text.next_to(coupling_region, DOWN, buff=0.1)
+        coupling_text = Text("Coupling Region", font_size=16, color=YELLOW)
+        coupling_text.next_to(coupling_region, DOWN, buff=0.15)
         
         # Group everything
         self.schematic = VGroup(ring, input_wg, input_label, through_label, 
                                  ring_label, coupling_region, coupling_text)
-        self.schematic.scale(0.7).shift(LEFT * 3.5)
+        self.schematic.scale(0.65).shift(LEFT * 3.5 + UP * 0.3)
         
         self.play(
             Create(ring),
@@ -90,31 +90,31 @@ class RingResonatorAnimation(Scene):
     def show_equations(self):
         """Display the key physics equations"""
         
-        equations_title = Text("Resonance Condition & Transmission", font_size=28, color=YELLOW)
-        equations_title.to_edge(RIGHT).shift(UP * 3 + LEFT * 0.5)
+        equations_title = Text("Resonance Condition & Transmission", font_size=24, color=YELLOW)
+        equations_title.to_edge(RIGHT, buff=0.5).shift(UP * 2.8)
         
         # Resonance condition
         resonance_eq = MathTex(
             r"\phi = \frac{2\pi n_{eff} L}{\lambda} = 2\pi m",
-            font_size=32
+            font_size=28
         )
         resonance_eq.next_to(equations_title, DOWN, buff=0.3)
         
         # Transmission equation
         transmission_eq = MathTex(
             r"T = \frac{a^2 - 2ar\cos(\phi) + r^2}{1 - 2ar\cos(\phi) + (ar)^2}",
-            font_size=30
+            font_size=26
         )
-        transmission_eq.next_to(resonance_eq, DOWN, buff=0.4)
+        transmission_eq.next_to(resonance_eq, DOWN, buff=0.35)
         
         # Parameter definitions
         params = VGroup(
-            MathTex(r"r = \text{self-coupling}", font_size=22),
-            MathTex(r"a = \text{round-trip loss}", font_size=22),
-            MathTex(r"\phi = \text{round-trip phase}", font_size=22),
-            MathTex(r"n_{eff} = \text{effective index}", font_size=22),
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
-        params.next_to(transmission_eq, DOWN, buff=0.4)
+            MathTex(r"r = \text{self-coupling}", font_size=20),
+            MathTex(r"a = \text{round-trip loss}", font_size=20),
+            MathTex(r"\phi = \text{round-trip phase}", font_size=20),
+            MathTex(r"n_{eff} = \text{effective index}", font_size=20),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        params.next_to(transmission_eq, DOWN, buff=0.35)
         
         self.equations_group = VGroup(equations_title, resonance_eq, transmission_eq, params)
         
@@ -129,8 +129,8 @@ class RingResonatorAnimation(Scene):
         """Animate electric field propagation through the resonator"""
         
         # Add E-field animation title
-        efield_title = Text("Electric Field Propagation", font_size=24, color=GREEN)
-        efield_title.next_to(self.schematic, DOWN, buff=0.5)
+        efield_title = Text("Electric Field Propagation", font_size=22, color=GREEN)
+        efield_title.next_to(self.schematic, DOWN, buff=0.8)
         self.play(Write(efield_title))
         
         # Create input wave
@@ -215,9 +215,9 @@ class RingResonatorAnimation(Scene):
         # Add explanation
         resonance_text = Text(
             "At resonance: light builds up in ring",
-            font_size=20,
+            font_size=18,
             color=YELLOW
-        ).next_to(efield_title, DOWN, buff=0.2)
+        ).next_to(efield_title, DOWN, buff=0.25)
         
         self.play(Write(resonance_text))
         self.wait(0.5)
@@ -246,7 +246,7 @@ class RingResonatorAnimation(Scene):
         
         # Fade out equations to make room
         self.play(
-            self.schematic.animate.scale(0.6).to_edge(LEFT).shift(UP * 0.5),
+            self.schematic.animate.scale(0.55).to_edge(LEFT, buff=0.3).shift(UP * 1.5),
             FadeOut(self.equations_group)
         )
         
@@ -262,31 +262,31 @@ class RingResonatorAnimation(Scene):
         axes = Axes(
             x_range=[1540, 1560, 5],
             y_range=[-30, 5, 5],
-            x_length=7,
-            y_length=4,
+            x_length=6.5,
+            y_length=3.5,
             axis_config={
                 "color": WHITE,
                 "include_tip": True,
                 "include_numbers": True,
             },
-            x_axis_config={"numbers_to_include": [1540, 1545, 1550, 1555, 1560]},
-            y_axis_config={"numbers_to_include": [-30, -25, -20, -15, -10, -5, 0]},
+            x_axis_config={"numbers_to_include": [1540, 1550, 1560]},
+            y_axis_config={"numbers_to_include": [-30, -20, -10, 0]},
         )
-        axes.shift(RIGHT * 2)
+        axes.shift(RIGHT * 2 + DOWN * 0.3)
         
         # Axis labels
         x_label = axes.get_x_axis_label(
-            MathTex(r"\lambda \text{ (nm)}", font_size=28),
+            MathTex(r"\lambda \text{ (nm)}", font_size=24),
             edge=DOWN, direction=DOWN
         )
         y_label = axes.get_y_axis_label(
-            MathTex(r"T \text{ (dB)}", font_size=28),
+            MathTex(r"T \text{ (dB)}", font_size=24),
             edge=LEFT, direction=LEFT
         )
         
         # Title for plot
-        plot_title = Text("Transmission Spectrum", font_size=28, color=YELLOW)
-        plot_title.next_to(axes, UP)
+        plot_title = Text("Transmission Spectrum", font_size=26, color=YELLOW)
+        plot_title.next_to(axes, UP, buff=0.3)
         
         # Create the transmission curve
         transmission_curve = axes.plot_line_graph(
@@ -329,10 +329,10 @@ class RingResonatorAnimation(Scene):
                 fsr_wavelength = lambda_nm[peaks_idx[1]] - lambda_nm[peaks_idx[0]]
                 fsr_text = MathTex(
                     rf"\Delta\lambda_{{FSR}} \approx {fsr_wavelength:.2f} \text{{ nm}}",
-                    font_size=22,
+                    font_size=20,
                     color=GREEN
                 )
-                fsr_text.next_to(axes, DOWN, buff=0.8)
+                fsr_text.next_to(axes, DOWN, buff=0.6)
                 self.fsr_text = fsr_text
         
         self.play(Create(resonance_markers))
@@ -348,12 +348,12 @@ class RingResonatorAnimation(Scene):
         
         # Add critical coupling explanation
         coupling_info = VGroup(
-            Text("Resonance conditions:", font_size=20, color=YELLOW),
-            MathTex(r"\bullet \text{ } \phi = 2\pi m \text{ (constructive interference)}", font_size=18),
-            MathTex(r"\bullet \text{ Critical coupling: } r = a", font_size=18),
-            MathTex(r"\bullet \text{ Q-factor } \propto \frac{1}{1-ar}", font_size=18),
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.15)
-        coupling_info.to_edge(LEFT).shift(DOWN * 2)
+            Text("Resonance conditions:", font_size=18, color=YELLOW),
+            MathTex(r"\bullet \text{ } \phi = 2\pi m", font_size=16),
+            MathTex(r"\bullet \text{ Critical coupling: } r = a", font_size=16),
+            MathTex(r"\bullet \text{ Q-factor } \propto \frac{1}{1-ar}", font_size=16),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.12)
+        coupling_info.to_edge(LEFT, buff=0.3).shift(DOWN * 1.8)
         
         self.play(Write(coupling_info), run_time=2)
         
@@ -386,39 +386,45 @@ class RingResonatorAnimation(Scene):
         self.play(*[FadeOut(obj) for obj in objects_to_remove])
         
         # Summary slide
-        summary_title = Text("Ring Resonator Summary", font_size=36, color=YELLOW)
-        summary_title.to_edge(UP)
+        summary_title = Text("Ring Resonator Summary", font_size=34, color=YELLOW)
+        summary_title.to_edge(UP, buff=1.0)
         
         summary_points = VGroup(
-            Text("Key Properties:", font_size=28, color=GREEN),
-            MathTex(r"\bullet \text{ Resonance: } \lambda_m = \frac{n_{eff} L}{m}", font_size=26),
-            MathTex(r"\bullet \text{ Free Spectral Range: } FSR = \frac{\lambda^2}{n_g L}", font_size=26),
-            MathTex(r"\bullet \text{ Finesse: } \mathcal{F} = \frac{FSR}{\Delta\lambda_{FWHM}}", font_size=26),
-            MathTex(r"\bullet \text{ Q-factor: } Q = \frac{\lambda}{\Delta\lambda_{FWHM}}", font_size=26),
-            Text(" ", font_size=20),
-            Text("Applications:", font_size=28, color=GREEN),
-            Text("  - Optical filters & wavelength multiplexers", font_size=22),
-            Text("  - Optical modulators & switches", font_size=22),
-            Text("  - Biosensors & chemical sensors", font_size=22),
-            Text("  - Optical delay lines", font_size=22),
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
-        summary_points.next_to(summary_title, DOWN, buff=0.5)
+            Text("Key Properties:", font_size=26, color=GREEN),
+            MathTex(r"\bullet \text{ Resonance: } \lambda_m = \frac{n_{eff} L}{m}", font_size=24),
+            MathTex(r"\bullet \text{ Free Spectral Range: } FSR = \frac{\lambda^2}{n_g L}", font_size=24),
+            MathTex(r"\bullet \text{ Finesse: } \mathcal{F} = \frac{FSR}{\Delta\lambda_{FWHM}}", font_size=24),
+            MathTex(r"\bullet \text{ Q-factor: } Q = \frac{\lambda}{\Delta\lambda_{FWHM}}", font_size=24),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.18)
+        summary_points.next_to(summary_title, DOWN, buff=0.35)
+
+        # Separate Applications section
+        applications_points = VGroup(
+            Text("Applications:", font_size=26, color=GREEN),
+            Text("  - Optical filters & wavelength multiplexers", font_size=20),
+            Text("  - Optical modulators & switches", font_size=20),
+            Text("  - Biosensors & chemical sensors", font_size=20),
+            Text("  - Optical delay lines", font_size=20),
+        ).arrange(DOWN, aligned_edge=LEFT, buff=0.18)
+        applications_points.next_to(summary_points, DOWN, buff=0.5)
         
         self.play(Write(summary_title))
         self.play(Write(summary_points), run_time=4)
+        self.play(Write(applications_points), run_time=2)
         
         self.wait(2)
         
         # Final fade out
         self.play(FadeOut(summary_title), FadeOut(summary_points))
+        self.play(FadeOut(applications_points))
 
 
 class RingResonatorDetailed(Scene):
     """More detailed animation showing field buildup at resonance vs off-resonance"""
     
     def construct(self):
-        title = Text("Ring Resonator: On vs Off Resonance", font_size=36)
-        title.to_edge(UP)
+        title = Text("Ring Resonator: On vs Off Resonance", font_size=32)
+        title.to_edge(UP, buff=0.4)
         self.play(Write(title))
         
         # Create two ring resonators side by side
@@ -428,22 +434,22 @@ class RingResonatorDetailed(Scene):
         """Compare on-resonance vs off-resonance behavior"""
         
         # On-resonance side
-        on_res_title = Text("On Resonance", font_size=24, color=GREEN)
-        on_res_title.shift(LEFT * 3.5 + UP * 2)
+        on_res_title = Text("On Resonance", font_size=22, color=GREEN)
+        on_res_title.shift(LEFT * 3.5 + UP * 2.2)
         
-        on_ring = Circle(radius=1, color=BLUE, stroke_width=6)
-        on_wg = Line(LEFT * 2, RIGHT * 2, color=BLUE, stroke_width=6)
-        on_wg.shift(DOWN * 1.3)
-        on_group = VGroup(on_ring, on_wg).shift(LEFT * 3.5)
+        on_ring = Circle(radius=0.9, color=BLUE, stroke_width=6)
+        on_wg = Line(LEFT * 1.8, RIGHT * 1.8, color=BLUE, stroke_width=6)
+        on_wg.shift(DOWN * 1.2)
+        on_group = VGroup(on_ring, on_wg).shift(LEFT * 3.5 + UP * 0.3)
         
         # Off-resonance side
-        off_res_title = Text("Off Resonance", font_size=24, color=RED)
-        off_res_title.shift(RIGHT * 3.5 + UP * 2)
+        off_res_title = Text("Off Resonance", font_size=22, color=RED)
+        off_res_title.shift(RIGHT * 3.5 + UP * 2.2)
         
-        off_ring = Circle(radius=1, color=BLUE, stroke_width=6)
-        off_wg = Line(LEFT * 2, RIGHT * 2, color=BLUE, stroke_width=6)
-        off_wg.shift(DOWN * 1.3)
-        off_group = VGroup(off_ring, off_wg).shift(RIGHT * 3.5)
+        off_ring = Circle(radius=0.9, color=BLUE, stroke_width=6)
+        off_wg = Line(LEFT * 1.8, RIGHT * 1.8, color=BLUE, stroke_width=6)
+        off_wg.shift(DOWN * 1.2)
+        off_group = VGroup(off_ring, off_wg).shift(RIGHT * 3.5 + UP * 0.3)
         
         self.play(
             Write(on_res_title), Write(off_res_title),
@@ -452,25 +458,25 @@ class RingResonatorDetailed(Scene):
         )
         
         # Create intensity indicators (glowing rings)
-        on_glow = Circle(radius=1, color=YELLOW, stroke_width=15, stroke_opacity=0.6)
+        on_glow = Circle(radius=0.9, color=YELLOW, stroke_width=15, stroke_opacity=0.6)
         on_glow.move_to(on_ring.get_center())
         
-        off_glow = Circle(radius=1, color=YELLOW, stroke_width=3, stroke_opacity=0.3)
+        off_glow = Circle(radius=0.9, color=YELLOW, stroke_width=3, stroke_opacity=0.3)
         off_glow.move_to(off_ring.get_center())
         
         # Animate field buildup
-        on_intensity_text = Text("High field buildup", font_size=18, color=YELLOW)
-        on_intensity_text.next_to(on_ring, DOWN, buff=1.8)
+        on_intensity_text = Text("High field buildup", font_size=16, color=YELLOW)
+        on_intensity_text.next_to(on_group, DOWN, buff=0.5)
         
-        off_intensity_text = Text("Low field buildup", font_size=18, color=GRAY)
-        off_intensity_text.next_to(off_ring, DOWN, buff=1.8)
+        off_intensity_text = Text("Low field buildup", font_size=16, color=GRAY)
+        off_intensity_text.next_to(off_group, DOWN, buff=0.5)
         
         # Transmission indicators
-        on_trans = Text("T ≈ 0 (at critical coupling)", font_size=16, color=RED)
-        on_trans.next_to(on_intensity_text, DOWN, buff=0.2)
+        on_trans = Text("T = 0 (critical coupling)", font_size=14, color=RED)
+        on_trans.next_to(on_intensity_text, DOWN, buff=0.25)
         
-        off_trans = Text("T ≈ 1", font_size=16, color=GREEN)
-        off_trans.next_to(off_intensity_text, DOWN, buff=0.2)
+        off_trans = Text("T = 1", font_size=14, color=GREEN)
+        off_trans.next_to(off_intensity_text, DOWN, buff=0.25)
         
         self.play(
             Create(on_glow),
@@ -506,11 +512,11 @@ class RingResonatorDetailed(Scene):
         
         # Explanation
         explanation = VGroup(
-            MathTex(r"\text{On resonance: } \phi = 2\pi m", font_size=24),
-            MathTex(r"\text{Constructive interference in ring}", font_size=22),
-            MathTex(r"\text{Destructive interference at output}", font_size=22),
-        ).arrange(DOWN, buff=0.2)
-        explanation.to_edge(DOWN)
+            MathTex(r"\text{On resonance: } \phi = 2\pi m", font_size=22),
+            MathTex(r"\text{Constructive interference in ring}", font_size=20),
+            MathTex(r"\text{Destructive interference at output}", font_size=20),
+        ).arrange(DOWN, buff=0.15)
+        explanation.to_edge(DOWN, buff=0.4)
         
         self.play(Write(explanation), run_time=2)
         
